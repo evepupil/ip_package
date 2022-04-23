@@ -22,7 +22,7 @@ func LoadMenus(w fyne.Window, app fyne.App) {
 	//"无线(W)", "工具(T)", "帮助(H)",
 	var tools = [][]string{{"保存", "打开"}, {"过滤器设置"}, {"源IP(递增)", "源IP(递减)", "目的IP(递增)", "目的IP(递减)", "源端口(递增)", "源端口(递减)", "目的端口(递增)",
 		"目的端口(递减)", "长度(递增)", "长度(递减)"},
-		{"选择网卡"}, {"严格模式", "混杂模式"}, {"发送数据包"}, {"暂停"}}
+		{"选择网卡"}, {"严格模式", "混杂模式"}, {"发送数据包"}, {"暂停/继续"}}
 	var toolsFunc = [][]func(){{
 		func() {
 			dialog.NewFileSave(func(closer fyne.URIWriteCloser, err error) {
@@ -339,7 +339,7 @@ func LoadMenus(w fyne.Window, app fyne.App) {
 		},
 		{
 			func() {
-
+				Interupt = !Interupt
 			},
 		},
 	}
@@ -348,6 +348,7 @@ func LoadMenus(w fyne.Window, app fyne.App) {
 		tMenu := []*fyne.MenuItem{}
 		for index, item := range tools[i] {
 			newMenuItem := fyne.NewMenuItem(item, toolsFunc[i][index])
+			newMenuItem.IsQuit = false
 			tMenu = append(tMenu, newMenuItem)
 		}
 		Menus = append(Menus, fyne.NewMenu(key, tMenu...))

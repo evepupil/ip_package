@@ -54,7 +54,7 @@ func SendPkg(pkg SendPkgInfo) (int, error) {
 	tcpLayer := &layers.TCP{}
 	if pkg.Source_ip != "" {
 		src_port, _ := strconv.Atoi(pkg.Source_port)
-		dest_port, _ := strconv.Atoi(pkg.Source_port)
+		dest_port, _ := strconv.Atoi(pkg.Dest_port)
 		ipLayer = &layers.IPv4{
 			IHL:      5,
 			SrcIP:    append(net.IP{}, IpStr2Bytes(pkg.Source_ip)...),

@@ -82,6 +82,7 @@ var Promiscuous bool = false
 var (
 	Sort_tpyes = 0
 )
+var Interupt bool = false
 
 func GetPkg(ctx context.Context, device_str string) {
 	InitData()
@@ -114,50 +115,47 @@ func GetPkg(ctx context.Context, device_str string) {
 	go monitor(ctx1)
 	defer cancel1()
 	for packet := range packetSource.Packets() {
-		//sourceIpfilter = <-util.ipChan
-		if No == 10 {
-			time.Sleep(5 * time.Second)
-		}
-		//packet:=<-packetSource.Packets()
-		p := anlysePacket(packet)
-		p.No = No
-		AllPkgs = append(AllPkgs, p)
-		AllPkgInfos = append(AllPkgInfos, packet)
-		Map_Pkg_Infos[p] = packet
-		if (SourceIp_filter == "" || p.Source == SourceIp_filter) &&
-			(DestIp_filter == "" || p.Dest == DestIp_filter) &&
-			(SourcePort_filter == "" || get_source_port(p.Info) == SourcePort_filter) &&
-			(DestPort_filter == "" || get_dest_port(p.Info) == DestPort_filter) {
-			if Sort_tpyes != 0 {
-				index := GetIndexInsert(PkgStringList, p.FormatePkgListInfo(), Sort_tpyes)
-				InsertPkgRow(&Pkgs, index, p)
-				InsertPkgInfo(&PkgInfos, index, packet)
-				InsertStr(&PkgStringList, index, p.FormatePkgListInfo())
-			} else {
-				Pkgs = append(Pkgs, p)
-				PkgInfos = append(PkgInfos, packet)
-				PkgStringList = append(PkgStringList, p.FormatePkgListInfo())
-			}
-			if SortBySourceIp == INCRESE {
-				ReLoadPkgList(PkgSortBySourceIp(Pkgs))
-			} else if SortBySourceIp == DECRESE {
-				ReLoadPkgList(PkgSortBySourceIpReverse(Pkgs))
-			} else if SortByDestIp == INCRESE {
-				ReLoadPkgList(PkgSortByDestIp(Pkgs))
-			} else if SortByDestIp == DECRESE {
-				ReLoadPkgList(PkgSortByDestIpReverse(Pkgs))
-			} else if SortByLength == INCRESE {
-				ReLoadPkgList(PkgSortByLength(Pkgs))
-			} else if SortByLength == DECRESE {
-				ReLoadPkgList(PkgSortByLengthReverse(Pkgs))
-			} else if SortBySourcePort == INCRESE {
-				ReLoadPkgList(PkgSortBySourcePort(Pkgs))
-			} else if SortBySourcePort == DECRESE {
-				ReLoadPkgList(PkgSortBySourcePortReverse(Pkgs))
-			} else if SortByDestPort == INCRESE {
-				ReLoadPkgList(PkgSortByDestPort(Pkgs))
-			} else if SortByDestPort == DECRESE {
-				ReLoadPkgList(PkgSortByDestPortReverse(Pkgs))
+		if Interupt == false {
+			p := anlysePacket(packet)
+			p.No = No
+			AllPkgs = append(AllPkgs, p)
+			AllPkgInfos = append(AllPkgInfos, packet)
+			Map_Pkg_Infos[p] = packet
+			if (SourceIp_filter == "" || p.Source == SourceIp_filter) &&
+				(DestIp_filter == "" || p.Dest == DestIp_filter) &&
+				(SourcePort_filter == "" || get_source_port(p.Info) == SourcePort_filter) &&
+				(DestPort_filter == "" || get_dest_port(p.Info) == DestPort_filter) {
+				if Sort_tpyes != 0 {
+					index := GetIndexInsert(PkgStringList, p.FormatePkgListInfo(), Sort_tpyes)
+					InsertPkgRow(&Pkgs, index, p)
+					InsertPkgInfo(&PkgInfos, index, packet)
+					InsertStr(&PkgStringList, index, p.FormatePkgListInfo())
+				} else {
+					Pkgs = append(Pkgs, p)
+					PkgInfos = append(PkgInfos, packet)
+					PkgStringList = append(PkgStringList, p.FormatePkgListInfo())
+				}
+				if SortBySourceIp == INCRESE {
+					ReLoadPkgList(PkgSortBySourceIp(Pkgs))
+				} else if SortBySourceIp == DECRESE {
+					ReLoadPkgList(PkgSortBySourceIpReverse(Pkgs))
+				} else if SortByDestIp == INCRESE {
+					ReLoadPkgList(PkgSortByDestIp(Pkgs))
+				} else if SortByDestIp == DECRESE {
+					ReLoadPkgList(PkgSortByDestIpReverse(Pkgs))
+				} else if SortByLength == INCRESE {
+					ReLoadPkgList(PkgSortByLength(Pkgs))
+				} else if SortByLength == DECRESE {
+					ReLoadPkgList(PkgSortByLengthReverse(Pkgs))
+				} else if SortBySourcePort == INCRESE {
+					ReLoadPkgList(PkgSortBySourcePort(Pkgs))
+				} else if SortBySourcePort == DECRESE {
+					ReLoadPkgList(PkgSortBySourcePortReverse(Pkgs))
+				} else if SortByDestPort == INCRESE {
+					ReLoadPkgList(PkgSortByDestPort(Pkgs))
+				} else if SortByDestPort == DECRESE {
+					ReLoadPkgList(PkgSortByDestPortReverse(Pkgs))
+				}
 			}
 			//统计流量
 			ethernetLayer := packet.Layer(layers.LayerTypeEthernet)

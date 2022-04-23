@@ -153,7 +153,10 @@ func getAppLayerData(packet gopacket.Packet) (branch string, nodes []string) {
 	}
 	app := packet.ApplicationLayer().LayerContents()
 	appBytes := packet.ApplicationLayer().LayerContents()
-	branch = "app"
+	branch = fmt.Sprintf("Data (%d bytes)", len(app))
+	Data := fmt.Sprintf("Data:%s", PkgBytes2String(app))
+	Length := fmt.Sprintf("[Length: %d bytes]", len(app))
+	nodes = append(nodes, Data, Length)
 	switch TransportProtcal {
 	case layers.LayerTypeUDP:
 		branch = fmt.Sprintf("Data (%d bytes)", len(app))
@@ -163,7 +166,6 @@ func getAppLayerData(packet gopacket.Packet) (branch string, nodes []string) {
 	case layers.LayerTypeTCP:
 		tcpLayer := packet.Layer(layers.LayerTypeTCP)
 		tcp, _ := tcpLayer.(*layers.TCP)
-		fmt.Println(tcp.SrcPort.String(), tcp.DstPort.String())
 		if tcp.SrcPort.String() == "80(http)" || tcp.DstPort.String() == "80(http)" {
 			branch = "Hypertext Transfer Protocol"
 			infos := []string{}

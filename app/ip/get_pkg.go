@@ -88,6 +88,7 @@ func GetPkg(ctx context.Context, device_str string) {
 	//dstIpfilter:=""
 	No := 1
 	// Open device
+	device = device_str
 	handle, err = pcap.OpenLive(device_str, snapshot_len, Promiscuous, timeout)
 	if err != nil {
 		log.Fatal(err)
@@ -324,7 +325,7 @@ func findMacAddrByIp(ip string) (string, error) {
 // 每一秒计算一次该秒内的数据包大小平均值，并将下载、上传总量置零
 func monitor(ctx context.Context) {
 	for {
-		FlowsStr.Set(fmt.Sprintf("\rDown:%.2fkb/s \t Up:%.2fkb/s", float32(downStreamDataSize)/1024/1, float32(upStreamDataSize)/1024/1))
+		FlowsStr.Set(fmt.Sprintf("\rDown:%.2fkb/s \t Up:%.2fkb/s                                                                                                                             ", float32(downStreamDataSize)/1024/1, float32(upStreamDataSize)/1024/1))
 		downStreamDataSize = 0
 		upStreamDataSize = 0
 		time.Sleep(1 * time.Second)

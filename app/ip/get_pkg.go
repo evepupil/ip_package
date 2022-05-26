@@ -70,7 +70,7 @@ var (
 )
 
 const (
-	//0默认 1递增 2递减
+	//0默认无 1递增 2递减
 	INCRESE = 1
 	DECRESE = 2
 )
@@ -95,9 +95,7 @@ func GetPkg(ctx context.Context, device_str string) {
 		log.Fatal(err)
 	}
 	defer handle.Close()
-	// Use the handle as a packet source to process all packets
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
-	//查找所有设备
 	devices, err := pcap.FindAllDevs()
 	var device pcap.Interface
 	for _, d := range devices {
@@ -105,7 +103,6 @@ func GetPkg(ctx context.Context, device_str string) {
 			device = d
 		}
 	}
-	// 根据网卡的ipv4地址获取网卡的mac地址，用于后面判断数据包的方向
 	macAddr, err := findMacAddrByIp(findDeviceIpv4(device))
 	if err != nil {
 		panic(err)

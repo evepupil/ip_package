@@ -104,7 +104,6 @@ func Byte2AscllString(b byte) string {
 	bint := int(b)
 	if bint >= 33 && bint <= 126 {
 		return string(b)
-
 	}
 	return "."
 

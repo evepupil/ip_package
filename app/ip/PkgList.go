@@ -22,17 +22,6 @@ func LoadPkgList() *fyne2.Container {
 
 		}))
 	}
-	//PkgStringList := binding.NewStringList()
-	//PkgList := widget.NewListWithData(PkgStringList,
-	//	func() fyne2.CanvasObject {
-	//		return widget.NewLabel("")
-	//	},
-	//	func(item binding.DataItem, object fyne2.CanvasObject) {
-	//		i := item.(binding.String)
-	//		l := object.(*widget.Label)
-	//		s, _ := i.Get()
-	//		l.SetText(s)
-	//	})
 	PkgList = widget.NewList(
 		func() int {
 			return len(PkgStringList)
@@ -50,8 +39,6 @@ func LoadPkgList() *fyne2.Container {
 		NewLayersData(id+1, packet)
 		LayersWidget.Refresh()
 		NewPkgInfoData(packet)
-		//pkg.Set(PkgBytes2String(ip.PkgInfos[id].Data()))
-
 	}
 	s := widget.NewSeparator()
 	PkgListContainer := container.NewBorder(pkgTextContainer, nil, nil, s, PkgList)
